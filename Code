@@ -1,0 +1,72 @@
+import java.util.*;
+
+public class FinalWordle {
+    public static Scanner sc = new Scanner(System.in);
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static void main(String[] args) {
+        int tries = 0;
+        System.out.println("Wordle: Type A Five Letter Word");
+        String answerChoosen = ReturnRandomWord();
+        char[] answer = new char[5];
+        for (int i = 0; i < 5; i++ ) answer[i] = answerChoosen.charAt(i);
+        char[] input = new char[5];        
+        boolean flag = false;
+        
+        while (!flag && tries<5){
+            tries++;
+            String R1 = sc.nextLine().toLowerCase();
+            while (R1.length() < 5) {
+                System.out.println("You have entered a "+R1.length()+" lettered word. Word length required : 5");
+                R1 = sc.nextLine().toLowerCase();
+            }
+            for (int i = 0; i < 5; i++ ) { //puts the inputWord into a char[]
+                answer[i] = answerChoosen.charAt(i);
+                input[i] = R1.charAt(i);
+            }
+            if (PrintWordWithColor(input, answer)) flag = true;
+        }
+        if(flag){System.out.println("Hey, You Found The Answer in " +tries + " tries.");}
+        else{
+            System.out.println("You could not guesss the word. It was "+answerChoosen);
+        }
+        
+    }
+
+    public static boolean PrintWordWithColor(char[] inputWord, char[] correctWord) {
+        boolean correct = true;
+        char[] answerTemp = correctWord;
+        int[] colorForLetter = new int[5]; //0 is grey, yellow is 1, green is 2
+
+        for (int i = 0; i < 5; i++) { //check for any correct position+letter (green)
+            if (inputWord[i] == answerTemp[i]) {
+                answerTemp[i] = '-';
+                colorForLetter[i] = 2;
+            } else correct = false;
+        }
+
+        for (int j = 0; j < 5; j++) { //check for any correct letter (yellow)
+            for (int k = 0; k < 5; k++){
+                if (inputWord[j] == answerTemp[k] && colorForLetter[j] != 2) {
+                    //if that letter is not already green and matches some other letter
+                    colorForLetter[j] = 1;
+                    answerTemp[k] = '-';
+                }
+            }
+        }
+
+        for (int m = 0; m < 5; m++) {
+            if (colorForLetter[m] == 0) System.out.print(inputWord[m]);
+            if (colorForLetter[m] == 1) System.out.print(ANSI_YELLOW + inputWord[m] + ANSI_RESET);
+            if (colorForLetter[m] == 2) System.out.print(ANSI_GREEN + inputWord[m] + ANSI_RESET);
+        }
+        System.out.println("");
+        return correct;
+    }
+
+    public static String ReturnRandomWord(){
+        String[] answerList = {"cigar", "rebut", "sissy", "humph", "awake", "blush", "focal", "evade", "naval", "serve", "heath", "dwarf", "model", "karma", "stink", "grade", "quiet", "alone", "hatch", "hyper", "thumb", "dowry", "ought", "belch", "dutch", "pilot", "tweed", "dryly", "drank", "acrid", "heady", "theta", "junto", "pixie", "quoth", "bonus", "shalt", "penne", "amend", "datum", "build", "piano", "shelf", "lodge", "suing", "rearm", "coral", "ramen", "worth", "psalm", "infer", "overt", "mayor", "ovoid", "glide", "usage", "poise", "randy", "chuck", "prank", "fishy", "tooth", "ether", "drove", "idler", "swath", "stint", "while", "begat", "apply", "slang", "tarot", "radar", "credo", "aware", "canon", "shift", "timer", "bylaw", "serum", "three", "steak", "iliac", "shirk", "blunt", "puppy", "penal", "joist", "bunny", "shape", "beget", "wheel", "adept", "stunt", "stole", "topaz", "chore", "fluke", "afoot", "bloat", "bully", "dense", "caper", "sneer", "boxer", "jumbo", "lunge", "space", "avail", "short", "slurp", "loyal", "flirt", "pizza", "conch", "tempo", "droop", "plate", "bible", "plunk", "afoul", "savoy", "steep", "agile", "stake", "dwell", "knave", "beard", "arose", "motif", "smash", "broil", "glare", "shove", "baggy", "mammy", "swamp", "along", "rugby", "wager", "quack", "olden", "clerk", "debar", "tally", "ethic", "cairn", "tulle", "ghoul", "hilly", "crude", "apart", "scale", "older", "plain", "sperm", "briny", "abbot", "rerun", "quest", "crisp", "bound", "befit", "drawn", "suite", "itchy", "cheer", "bagel", "guess", "broad", "axiom", "chard", "caput", "leant", "harsh", "curse", "proud", "swing", "opine", "taste", "lupus", "gumbo", "miner", "green", "chasm", "lipid", "topic", "armor", "brush", "crane", "mural", "abled", "habit", "bossy", "maker", "dusky", "dizzy", "lithe", "brook", "jazzy", "fifty", "sense", "giant", "surly", "legal", "fatal", "flunk", "began", "prune", "small", "anode", "crime", "salve", "scout", "imbue", "pinky", "stave", "vague", "chock", "fight", "video", "stone", "teach", "cleft", "frost", "prawn", "booty", "twist", "apnea", "stiff", "plaza", "ledge", "tweak", "board", "grant", "medic", "bacon", "cable", "brawl", "slunk", "raspy", "forum", "drone", "women", "mucus", "boast", "toddy", "coven", "tumor", "truer", "wrath", "stall", "steam", "axial", "purer", "daily", "trail", "niche", "mealy", "juice", "nylon", "plump", "merry", "flail", "papal", "wheat", "berry", "cower", "erect", "brute", "leggy", "snipe", "sinew", "skier", "penny", "jumpy", "rally", "umbra", "scary", "modem", "gross", "avian", "greed", "satin", "tonic", "parka", "sniff", "livid", "stark", "trump", "giddy", "reuse", "taboo", "avoid", "quote", "devil", "liken",  "mower", "payee", "serif", "drape", "fifth", "spank", "glaze", "allot", "alibi", "whine", "petty", "golly", "plait", "fleck", "felon", "gourd", "brown", "thrum", "ficus", "stash", "decry", "wiser", "junta", "visor", "daunt", "scree", "impel", "await", "press", "whose", "turbo", "stoop", "speak", "mangy", "eying", "inlet", "crone", "pulse", "mossy", "staid", "hence"};
+        return answerList[(int)(Math.random() * (answerList.length - 1))]; //just returns a random word from this large list
+    }
+}
